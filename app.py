@@ -2,9 +2,7 @@ import streamlit as st
 import joblib
 import re
 
-# ======================
-# LOAD MODEL & TF-IDF
-# ======================
+
 @st.cache_resource
 def load_model():
     model = joblib.load('sentiment_model.pkl')
@@ -13,9 +11,7 @@ def load_model():
 
 model, tfidf = load_model()
 
-# ======================
-# PREPROCESSING
-# ======================
+
 def clean_text(text):
     text = text.lower()
 
@@ -29,9 +25,7 @@ def clean_text(text):
     text = re.sub(r'\s+', ' ', text).strip()
     return text
 
-# ======================
-# PREDICTION FUNCTION
-# ======================
+
 def predict_sentiment(text):
     text_clean = clean_text(text)
     vec = tfidf.transform([text_clean])
@@ -43,22 +37,20 @@ def predict_sentiment(text):
 
     return label, confidence
 
-# ======================
-# STREAMLIT UI
-# ======================
+
 st.set_page_config(page_title="Analisis Sentimen", page_icon="📝", layout="centered")
 
 st.title("📝 Analisis Sentimen Ulasan Produk Lazada")
 st.write("Masukkan komentar ulasan produk untuk mengetahui sentimennya.")
 
-# Input text
+
 user_input = st.text_area(
     "✍️ Tulis komentar:",
     placeholder="Contoh: barang rusak dan tidak sesuai deskripsi",
     height=150
 )
 
-# Button
+
 if st.button("🔍 Analisis Sentimen"):
     if user_input.strip() == "":
         st.warning("Komentar tidak boleh kosong!")
@@ -69,8 +61,7 @@ if st.button("🔍 Analisis Sentimen"):
         st.success(f"**Sentimen:** {label}")
         st.info(f"**Confidence:** {confidence:.2%}")
 
-# ======================
-# FOOTER
-# ======================
+
 st.markdown("---")
 st.caption("Model: TF-IDF + Logistic Regression | Bahasa Indonesia")
+
